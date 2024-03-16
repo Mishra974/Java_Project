@@ -1,0 +1,85 @@
+package readExcelData;
+
+import java.io.FileInputStream;
+import java.util.ArrayList;
+import java.util.Scanner;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+
+public class VotingProcess {
+    Scanner sc = new Scanner(System.in);
+
+
+    public ArrayList<String> lists(int choice) {
+        String fileloc = "C:\\Users\\Dell\\eclipse-workspace\\testingBaba\\Excel\\TESTING.xlsx";
+        ArrayList<String> list = new ArrayList<>();
+        try {
+            FileInputStream fis = new FileInputStream(fileloc);
+            XSSFWorkbook wb = new XSSFWorkbook(fis);
+            XSSFSheet sheets = wb.getSheetAt(0);
+           // int rows = sheets.getPhysicalNumberOfRows();
+            for (int i = 0; i < 12; i++) {
+                if (choice == 1) {
+                    list.add(sheets.getRow(i).getCell(0).getStringCellValue());
+                } else if (choice == 2) {
+                    list.add(sheets.getRow(i).getCell(1).getStringCellValue());
+                } else if (choice == 3) {
+                    list.add(sheets.getRow(i).getCell(2).getStringCellValue());
+                }
+            }
+          
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+        return list;
+        
+    }
+    public void vote() {
+        try {
+            System.out.println("Enter Your Name According to Aadhar/PanCard/VoterId:");
+            String name = sc.nextLine();
+            System.out.println("Please Enter Your Age:");
+            int age = sc.nextInt();
+            if (age < 18) {
+                System.out.println("You are Not Eligible for Voting");
+            } else {
+                System.out.println("Enter Your Choice:-\n 1. Voter Card\n 2. Aadhar Card\n 3. Pan Card");
+                int idChoice = sc.nextInt();
+                ArrayList<String> idList = lists(idChoice);
+                if (idList != null) {
+                    System.out.println("Enter Your ID Number:");
+                    String id = sc.next();
+                    
+                    if  (idList.contains(id)) {
+                        System.out.println("Your Record Found.");
+                        System.out.println("Enter The Choice of Party:\n1. BJP\n2. Congress\n3. Aap\n4. Other");
+                        int partyName = sc.nextInt();
+                        
+                        switch (partyName) {
+                            
+                        case 1: System.out.println("Your vote Goes to BJP Successfully");break;
+                        case 2:System.out.println("Your vote Goes to Congress Successfully");break;
+                        case 3:System.out.println("Your vote Goes to Aap Successfully");break;
+                        case 4: System.out.println("Your vote Goes to Other Successfully");break;
+                        default:System.out.println("Please enter correct Choice");
+                        }
+                        System.out.println("Your Name: " + name);
+                        System.out.println("Your Age: " + age);
+                        System.out.println("ID Card No: " + id);
+                    } else {
+                        System.out.println("Your Record Not Found.");
+                    }
+                } else {
+                    System.out.println("Invalid ID Choice.");
+                }
+            }
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+    }
+
+    public static void main(String[] args) {
+        VotingProcess vp = new VotingProcess();
+        vp.vote();
+    }
+}
